@@ -3,21 +3,8 @@ const connection = require('../data/db')
 
 //index
 function index(req, res) {
-    /*  //find post by tag
-     const filteredPost = posts.filter(post => post.tags === req.query.tag)
-     //error handler
-     if (!filteredPost) {
-         return res.status(404).json({
-             error: "404 not found",
-             message: "post not found"
-         })
-     }
-     //results
-     console.log(posts)
-     res.json(filteredPost) */
-    /* throw new Error("Server error"); */
 
-    const sql = 'SELECT * FROM pizzas';
+    const sql = 'SELECT * FROM posts';
 
     connection.query(sql, (err, results) => {
         if (err) return res.status(500).json({ error: 'Database query failed' });
