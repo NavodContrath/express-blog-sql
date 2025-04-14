@@ -5,7 +5,7 @@ const postController = require('../controllers/post_controller')
 //index
 router.get('/', postController.index)
 //show
-router.get('/:slug', postController.show)
+router.get('/:id', postController.show)
 //store
 router.post('/', postController.store)
 //update
