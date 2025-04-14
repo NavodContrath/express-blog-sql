@@ -4,7 +4,6 @@ const connection = require('../data/db')
 function index(req, res) {
 
     const sql = 'SELECT * FROM posts';
-
     connection.query(sql, (err, results) => {
         if (err) return res.status(500).json({ error: 'Database query failed' });
         res.json(results);
@@ -22,7 +21,6 @@ function show(req, res) {
         const post = results[0]
         res.json(post);
     })
-
 }
 //store
 function store(req, res) {
@@ -67,19 +65,12 @@ function modify(req, res) {
 }
 //destroy
 function destroy(req, res) {
-    //find post by slug
-    const foundPost = posts.find(post => post.slug === req.params.slug)
-    //error handler
-    if (!foundPost) {
-        return res.status(404).json({
-            error: "404 not found",
-            message: "post not found"
-        })
-    }
-    //remove post from the array
-    posts.splice(posts.indexOf(foundPost), 1)
-    //log posts to verify right functioning
-    console.log(posts)
+    const id = Number(req.params.id)
+    const sql = 'DELETE FROM posts WHERE id=?'
+
+    connection.query(sql, [id], (err) => {
+        if (err) return res.status(500).json({ message: 'Database query failed' })
+    })
     //response with no content
     res.sendStatus(204)
 }
