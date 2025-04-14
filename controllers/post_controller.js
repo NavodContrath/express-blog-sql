@@ -12,14 +12,24 @@ function index(req, res) {
 }
 //show
 function show(req, res) {
-    const id = Number(req.params.id)
-    console.log(id)
+    const postId = Number(req.params.id)
+    console.log(postId)
     const sql = `SELECT * FROM posts WHERE id=?`
-    connection.query(sql, [id], (err, results) => {
+    const sqlJoin = 'SELECT tags.* FROM post_tag JOIN tags ON post_tag.tag_id = tags.id WHERE post_tag.post_id=?'
+    connection.query(sql, [postId], (err, postResults) => {
         if (err) return res.status(500).json({ error: 'Database query failed' });
-        if (results.length === 0) return res.status(404).json({ error: '404', message: 'Data not found' })
-        const post = results[0]
-        res.json(post);
+        if (postResults.length === 0) return res.status(404).json({ error: '404', message: 'Data not found' })
+        const post = postResults[0]
+
+        connection.query(sqlJoin, [postId], (err, tagResults) => {
+            if (err) return res.status(500).json({ error: 'Database query failed' });
+            console.log(tagResults)
+            post.tags = tagResults
+
+            res.json(post);
+        })
+
+
     })
 }
 //store
@@ -65,10 +75,10 @@ function modify(req, res) {
 }
 //destroy
 function destroy(req, res) {
-    const id = Number(req.params.id)
+    const postId = Number(req.params.id)
     const sql = 'DELETE FROM posts WHERE id=?'
 
-    connection.query(sql, [id], (err) => {
+    connection.query(sql, [postId], (err) => {
         if (err) return res.status(500).json({ message: 'Database query failed' })
     })
     //response with no content
