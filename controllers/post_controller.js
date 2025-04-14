@@ -1,4 +1,3 @@
-const posts = require('../data/posts')
 const connection = require('../data/db')
 
 //index
@@ -9,21 +8,20 @@ function index(req, res) {
     connection.query(sql, (err, results) => {
         if (err) return res.status(500).json({ error: 'Database query failed' });
         res.json(results);
+        console.log(results)
     })
 }
 //show
 function show(req, res) {
-    /*  //find post by slug
-     const foundPost = posts.find(post => post.slug === req.params.slug)
-     //error handler
-     if (!foundPost) {
-         return res.status(404).json({
-             error: "404 not found",
-             message: "post not found"
-         })
-     }
-     //return post
-     res.json(foundPost) */
+    const id = Number(req.params.id)
+    console.log(id)
+    const sql = `SELECT * FROM posts WHERE id=?`
+    connection.query(sql, [id], (err, results) => {
+        if (err) return res.status(500).json({ error: 'Database query failed' });
+        if (results.length === 0) return res.status(404).json({ error: '404', message: 'Data not found' })
+        const post = results[0]
+        res.json(post);
+    })
 
 }
 //store
