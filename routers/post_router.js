@@ -13,6 +13,6 @@ router.put('/:slug', postController.update)
 //modify
 router.patch('/:slug', postController.modify)
 //destroy
-router.delete('/:slug', postController.destroy)
+router.delete('/:id', postController.destroy)
 
 module.exports = router
